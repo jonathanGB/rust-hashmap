@@ -1,5 +1,6 @@
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
+use std::mem;
 
 pub struct HashMap {
   pub values: Vec<Option<String>>,
@@ -23,18 +24,12 @@ impl HashMap {
   pub fn insert(&mut self, key: String, val: String) -> Option<String> {
     let idx = self.hash(&key);
 
-    match &mut self.values[idx] {
-      Some(existing_val) => {
-        let existing_val = existing_val.clone();
-        self.values[idx] = Some(val);
-        Some(existing_val)
-      },
-      None => {
-        self.values[idx] = Some(val);
-        self.len += 1;
-        None
-      }
+    let existing_val = mem::replace(&mut self.values[idx], Some(val));
+    if let None = existing_val {
+      self.len += 1;
     }
+
+    existing_val
   }
 
   pub fn get(&mut self, key: &str) -> &Option<String> {
