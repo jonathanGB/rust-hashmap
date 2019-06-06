@@ -3,6 +3,7 @@ use std::hash::{Hash, Hasher};
 use std::mem;
 use std::iter::Iterator;
 use std::iter::IntoIterator;
+use std::ops::Index;
 
 pub struct HashMap {
   values: Vec<Option<(String, String)>>,
@@ -101,6 +102,14 @@ impl<'a> IntoIterator for &'a HashMap {
       hashmap: &self,
       at: 0,
     }
+  }
+}
+
+impl Index<&str> for HashMap {
+  type Output = String;
+
+  fn index(&self, index: &str) -> &Self::Output {
+    self.get(index).expect(&format!("HashMap has no value with key {}", index))
   }
 }
 

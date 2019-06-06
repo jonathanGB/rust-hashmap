@@ -52,7 +52,8 @@ fn main() {
         }
     }
 
-    println!("\n");
+    println!("Review for Jane: {}", book_reviews["Pride and Prejudice"]);
+    // println!("Review for fake_book {}", book_reviews["fake_book"]);
 
     for (book, review) in &book_reviews {
         println!("{}: \"{}\"", book, review);
