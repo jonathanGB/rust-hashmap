@@ -229,6 +229,14 @@ mod tests {
     }
 
     #[test]
+    fn get_has_good_return() {
+        let mut map = HashMap::<i8,i8>::new();
+        assert_eq!(map.get(&5), None);
+        map.insert(5, 42);
+        assert_eq!(map.get(&5), Some(&42));
+    }
+
+    #[test]
     fn inserts_has_good_return() {
         let mut map = HashMap::new();
         assert_eq!(map.insert(String::from("a"), String::from("b")), None);
@@ -236,5 +244,64 @@ mod tests {
             map.insert(String::from("a"), String::from("c")),
             Some(String::from("b"))
         );
+    }
+
+    #[test]
+    fn remove_has_good_return() {
+        let mut map = HashMap::<String, i8>::new();
+        assert_eq!(map.remove("bad_key"), None);
+        map.insert(String::from("good_key"), 9);
+        map.insert(String::from("another_good_key"), -27);
+        assert_eq!(map.remove("good_key"), Some(9));
+    }
+
+    #[test]
+    fn len_has_good_return() {
+        let mut map = HashMap::<i8,i8>::new();
+        assert_eq!(map.len(), 0);
+        map.insert(-27, 11);
+        assert_eq!(map.len(), 1);
+        map.remove(&-27);
+        assert_eq!(map.len(), 0);
+    }
+
+    #[test]
+    fn contains_has_good_return() {
+        let mut map = HashMap::<(String, i32), u8>::new();
+        map.insert((String::from("bonjour"), 100), 1);
+        assert_eq!(map.contains_key(&(String::from("hola"), 100)), false);
+        assert_eq!(map.contains_key(&(String::from("bonjour"), 100)), true);
+    }
+
+    #[test]
+    fn index_has_good_return() {
+        let mut map = HashMap::new();
+        map.insert(String::from("a"), String::from("b"));
+        assert_eq!(map["a"], "b");
+    }
+
+    #[test]
+    #[should_panic(expected = "HashMap has no value linked to this key")]
+    fn index_unknown_should_panic() {
+        let map = HashMap::<i8, i8>::new();
+        map[&5];
+    }
+
+    #[test]
+    fn should_be_iterable_in_a_for_loop() {
+        let mut map = HashMap::<i32, bool>::new();
+        map.insert(10, true);
+        map.insert(20, true);
+        map.insert(5, true);
+        map.insert(7, false);
+        map.insert(-9, true);
+
+        let mut result : Vec<&i32> = Vec::new();
+        for (key, _) in &map {
+            result.push(key);
+        }
+
+        result.sort();
+        assert_eq!(result, vec![&-9, &5, &7, &10, &20]);
     }
 }
